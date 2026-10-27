@@ -1,10 +1,11 @@
 // First visit: an egg hatches, she designs her unicorn and gives it a name.
-import { h, art } from './dom.js';
+import { h, art, toast } from './dom.js';
 import { burstAt, confetti } from './fx.js';
 import { designer } from './designer.js';
 import { unicornSVG } from '../art/unicorn.js';
 import { DEFAULT_LOOK } from '../art/catalog.js';
 import { sfx } from '../audio/sfx.js';
+import { parseBackup } from '../store/db.js';
 
 const CRACKS = ['M58 74 l12 8 l-7 10 l10 8', 'M104 62 l-9 11 l8 8 l-10 10', 'M30 116 l16 -7 l12 9 l16 -8 l14 7 l16 -8 l16 6'];
 const IDEAS = ['Sparkle', 'Luna', 'Stardust', 'Rosie', 'Comet', 'Bubbles', 'Willow', 'Pip'];
@@ -46,7 +47,26 @@ export function hatchScreen(app) {
     });
     el.replaceChildren(h('main', { class: 'hatch-main' },
       h('h1', { class: 'game-title' }, 'A magic egg!'), egg,
-      h('p', { class: 'big-line' }, 'Something wonderful is about to hatch. Tap the egg!')));
+      h('p', { class: 'big-line' }, 'Something wonderful is about to hatch. Tap the egg!')), restoreLink());
+  }
+
+  // On a new device (say, the tablet), a grown-up can bring her unicorn over from a backup
+  // before anything hatches here.
+  function restoreLink() {
+    const input = h('input', { type: 'file', accept: 'application/json,.json', class: 'hidden-file' });
+    input.addEventListener('change', async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      try {
+        await app.store.merge(parseBackup(await file.text()));
+        app.refold();
+        if (app.model.name) app.go('home');
+        else toast('That backup has no unicorn in it yet.');
+      } catch (err) {
+        toast(`Couldn't read that file: ${err.message}`);
+      }
+    });
+    return h('div', {}, input, h('button', { class: 'grownups-link', type: 'button', onClick: () => input.click() }, 'Grown-ups: restore a backup'));
   }
 
   function stepMeet() {
