@@ -20,7 +20,9 @@ export function budgets(m) {
   const load = learningLoad(m);
   const acc = m.recent.length >= 8 ? m.recent.reduce((a, b) => a + b, 0) / m.recent.length : 1;
   const fam = load.mul >= 8 ? 0 : load.mul >= 5 || acc < 0.75 ? 1 : acc >= 0.9 && load.mul <= 2 ? 3 : 2;
-  const rev = load.div >= 8 || acc < 0.6 ? 0 : load.div >= 4 || acc < 0.8 ? 1 : 2;
+  // If the division checks show she already knows her reverse spells, let more through.
+  const knowsDiv = m.divProbes.length >= 4 && m.divProbes.reduce((a, b) => a + b, 0) / m.divProbes.length >= 0.8;
+  const rev = load.div >= 8 || acc < 0.6 ? 0 : load.div >= 4 || acc < 0.8 ? 1 : knowsDiv && load.div <= 2 ? 4 : 2;
   return { fam, rev };
 }
 

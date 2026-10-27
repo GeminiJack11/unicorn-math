@@ -34,7 +34,7 @@ export function simulateLearner(catalog, { days = 7, start = Date.now() - days *
   for (const it of catalog.items.values()) {
     const fam = catalog.items.get(it.family);
     const k = knows.includes(fam.a) || knows.includes(fam.b);
-    strength.set(it.id, k ? (it.kind === 'mul' ? 0.97 : 0.9) : 0);
+    strength.set(it.id, k ? 0.96 : 0); // known facts sit above the forgetting line below
   }
   const bump = (id, by) => strength.set(id, Math.min(0.98, strength.get(id) + by));
 

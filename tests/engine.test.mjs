@@ -17,7 +17,7 @@ function snapshot(m) {
     items: [...m.items].sort(([a], [b]) => (a < b ? -1 : 1)),
     name: m.name, look: m.look, settings: m.settings, bought: [...m.bought].sort(),
     earned: m.earned, spent: m.spent, days: [...m.days].sort(), cleared: [...m.cleared].sort(),
-    recent: m.recent, quickMs: m.quickMs,
+    recent: m.recent, quickMs: m.quickMs, divProbes: m.divProbes,
   });
 }
 

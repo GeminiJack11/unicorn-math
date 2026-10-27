@@ -23,6 +23,7 @@ export function emptyModel(catalog) {
     cleared: new Set(),
     recent: [],
     quickMs: [],
+    divProbes: [],
     lastT: 0,
   };
 }
@@ -112,6 +113,10 @@ function applyAnswer(m, ev) {
 
   if (ev.ctx === 'probe') {
     s.probed = true;
+    if (item.kind === 'div') {
+      m.divProbes.push(ev.ok && ev.fluent ? 1 : 0);
+      if (m.divProbes.length > 10) m.divProbes.shift();
+    }
     if (ev.ok) {
       s.introduced = true;
       if (ev.fluent) {
