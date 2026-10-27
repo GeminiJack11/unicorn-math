@@ -1,0 +1,12 @@
+{
+  "name": "unicorn-math",
+  "private": true,
+  "type": "module",
+  "description": "A unicorn-themed times tables and division practice game that runs in the browser.",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "simulate": "node tools/simulate.mjs",
+    "serve": "python -m http.server 8765",
+    "stamp": "node tools/stamp-sw.mjs"
+  }
+}
