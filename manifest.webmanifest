@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "Rainbow Isles",
+  "short_name": "Rainbow Isles",
+  "description": "A unicorn adventure for practicing times tables and division.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f6efff",
+  "theme_color": "#f1ebff",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

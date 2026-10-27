@@ -149,7 +149,8 @@ button { -webkit-tap-highlight-color: transparent; user-select: none; -webkit-us
 .line { font-size: 1.1rem; color: var(--ink-soft); margin: 0.4em 0; }
 
 /* Unicorn animations */
-.hero-pet svg, .pet svg { width: 100%; height: auto; display: block; overflow: visible; }
+.hero-pet svg, .pet svg { width: 100%; height: auto; display: block; }
+svg.unicorn { overflow: visible; }
 .idle svg { animation: bob 3.2s ease-in-out infinite; }
 .u-tail { animation: sway 2.8s ease-in-out infinite; }
 .u-eye { animation: blink 5.5s infinite; }
@@ -501,7 +502,10 @@ button { -webkit-tap-highlight-color: transparent; user-select: none; -webkit-us
   .hero-pet { width: min(80vw, 360px, 38vh); }
   .session-body { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr) auto; padding: 4px 16px 18px; gap: 10px; }
   .session.no-pad .session-body { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
-  .pet { width: 150px; align-self: center; }
+  .pet { width: 120px; align-self: center; }
+  .session .stage { align-self: stretch; align-items: flex-start; overflow-y: auto; }
+  .picture-wrap svg { max-height: 24vh; }
+  .steps p { font-size: 1.1rem; }
   .keypad { max-width: 420px; }
   .key { aspect-ratio: 1.5; }
   .lesson-grid { grid-template-columns: 1fr; text-align: center; }

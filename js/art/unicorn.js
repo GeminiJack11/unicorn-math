@@ -15,7 +15,7 @@ function geometry(age) {
   const legLen = 44 + 22 * a;
   const bodyRx = 58 + 12 * a;
   const bodyRy = 39 + 7 * a;
-  const bodyCx = 138;
+  const bodyCx = 146;
   const bodyCy = ground - legLen - bodyRy * 0.5;
   const headR = 51 - 4 * a;
   const headCx = bodyCx + bodyRx * 0.8 + 15;

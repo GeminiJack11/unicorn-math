@@ -67,6 +67,12 @@ export function sessionScreen(app, { focus = null } = {}) {
     show();
   }
 
+  // On cards without a question, Enter (or the hidden pad's ✓) just continues.
+  function enterContinues(fn) {
+    keypad.setEnabled(true);
+    keypad.bind({ enter: fn });
+  }
+
   function showIsland(card) {
     const isl = cat.islands[card.island];
     sfx.sparkle();
@@ -76,6 +82,7 @@ export function sessionScreen(app, { focus = null } = {}) {
       h('p', { class: 'big-line' }, isl.why),
       h('p', { class: 'line' }, `Let's see which ${isl.table} spells you already know. If one is new, tap "Teach me" and we'll learn it together.`),
       h('button', { class: 'btn primary big', type: 'button', onClick: () => next() }, "Let's go!")));
+    enterContinues(() => next());
   }
 
   function showLesson(card) {
@@ -109,6 +116,7 @@ export function sessionScreen(app, { focus = null } = {}) {
     }
     body.append(h('button', { class: 'btn primary big', type: 'button', onClick: () => next() }, lesson.kind === 'rule' ? 'Got it!' : 'Try it!'));
     stage.append(body);
+    enterContinues(() => next());
   }
 
   function showQuestion(card) {
@@ -192,6 +200,7 @@ export function sessionScreen(app, { focus = null } = {}) {
       h('div', { class: 'q-note' }, skip ? "Let's learn this one!" : "That's a new one for you. We'll learn it!"),
       h('div', { class: 'problem small' }, `${parts.left} ${parts.op} ${parts.right} = ${parts.answer}`),
       h('button', { class: 'btn primary big', type: 'button', onClick: done }, 'OK!')));
+    enterContinues(done);
   }
 
   // A gentle second look: the picture and the trick, then she types the answer to go on.
