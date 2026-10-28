@@ -36,7 +36,8 @@ it with pretend progress that isn't saved.
 
 ## Development
 
-- `npm test`: engine tests (Node 20+).
+- `npm test`: engine and Boutique catalog tests (Node 20+). Item ids in `js/art/catalog.js` are
+  stored in saved progress, so never rename or remove one; the catalog tests check this.
 - `npm run simulate -- 40 0,1,10`: how a pretend learner moves through the islands.
 - `npm run stamp`: refresh the offline file list and version in `sw.js` before publishing.
 

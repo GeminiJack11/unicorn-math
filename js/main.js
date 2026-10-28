@@ -82,7 +82,13 @@ function registerServiceWorker(app) {
   const local = ['localhost', '127.0.0.1'].includes(location.hostname);
   if (!('serviceWorker' in navigator) || (local && !params.has('sw'))) return;
   const hadController = !!navigator.serviceWorker.controller;
-  navigator.serviceWorker.register('sw.js').catch((err) => console.warn('Offline mode unavailable:', err));
+  navigator.serviceWorker.register('sw.js').then((reg) => {
+    // An installed app can sit in the background for days; look for a new version
+    // each time she comes back to it.
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') reg.update().catch(() => {});
+    });
+  }).catch((err) => console.warn('Offline mode unavailable:', err));
   // A new version took over: reload the next time she's back on the home screen.
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (hadController) app.updateReady = true;

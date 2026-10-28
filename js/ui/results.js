@@ -2,7 +2,7 @@
 import { h, art, icon } from './dom.js';
 import { confetti } from './fx.js';
 import { changes } from './progress.js';
-import { unicornSVG } from '../art/unicorn.js';
+import { petSceneSVG } from '../art/scenes.js';
 import { friendSVG } from '../art/friends.js';
 import { rewardFor } from '../art/catalog.js';
 import { growth } from '../engine/model.js';
@@ -39,7 +39,7 @@ export function resultsScreen(app, { before, right = 0 }) {
   const el = h('div', { class: 'screen results' },
     h('main', { class: 'results-main' },
       h('h1', { class: 'game-title' }, 'Quest complete!'),
-      art(unicornSVG(m.look, { age: g.age, wings: g.wings, mood: 'joy' }), 'hero-pet hop-loop'),
+      art(petSceneSVG(m.look, { age: g.age, wings: g.wings, mood: 'joy' }), 'hero-pet hop-loop'),
       h('div', { class: 'stat-row' },
         h('div', { class: 'stat' }, icon('star', 'icon dust-icon'), h('b', {}, `+${ch.stardust}`), h('span', {}, 'stardust')),
         h('div', { class: 'stat' }, h('b', {}, String(right)), h('span', {}, 'right answers')),

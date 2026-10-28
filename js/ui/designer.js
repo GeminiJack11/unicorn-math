@@ -2,7 +2,8 @@
 // Boutique, locked styles can be bought with stardust or earned from island friends.
 import { h, art, icon, modal, toast } from './dom.js';
 import { dustPill } from './home.js';
-import { unicornSVG } from '../art/unicorn.js';
+import { unicornSVG, tailBowSVG } from '../art/unicorn.js';
+import { sceneSVG, petSceneSVG } from '../art/scenes.js';
 import { SLOTS, DEFAULT_LOOK, ownedSet } from '../art/catalog.js';
 import { RAINBOW } from '../art/color.js';
 import { sfx } from '../audio/sfx.js';
@@ -23,17 +24,32 @@ function swatchFace(it, look, age) {
     }
     case 'eye':
       return art(`<svg viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="11" ry="15" fill="${v}" stroke="#2a1f3d" stroke-width="2.5"/><circle cx="24" cy="13" r="4.5" fill="#fff"/></svg>`, 'swatch-art');
-    default: {
-      const trial = { ...look, [it.slot]: it.id };
-      return art(unicornSVG(trial, { age, crop: it.slot === 'head' ? 'head' : 'full' }), 'swatch-art pet-mini');
-    }
+    case 'scene':
+      if (v) return art(sceneSVG(v), 'swatch-art');
+      break;
+    case 'tail':
+      if (v) return art(`<svg viewBox="0 0 40 40">${tailBowSVG(v, 20, 13, 0.85, '#6b5a8e')}</svg>`, 'swatch-art');
+      break;
+    case 'hoof':
+      if (v) {
+        const fill = v === 'glitter' ? 'url(#hg)' : v;
+        return art(`<svg viewBox="0 0 40 40"><defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb3e0"/><stop offset="0.5" stop-color="#d4b8ff"/><stop offset="1" stop-color="#9fdcff"/></linearGradient></defs><path d="M11 10 H29 V28 Q29 33 24 33 H16 Q11 33 11 28 Z" fill="${fill}" stroke="#6b5a8e" stroke-width="2.5" stroke-linejoin="round"/><path d="M11 22 H29" stroke="#6b5a8e" stroke-width="2" opacity="0.4"/></svg>`, 'swatch-art');
+      }
+      break;
   }
+  // Everything else is shown on her unicorn itself; face and hair items on a close-up.
+  const trial = { ...look, [it.slot]: it.id };
+  return art(unicornSVG(trial, { age, crop: ['head', 'hair', 'face'].includes(it.slot) ? 'head' : 'full' }), 'swatch-art pet-mini');
 }
 
 export function designer(app, { mode = 'boutique', onDone }) {
   const cat = app.catalog;
   let look = { ...DEFAULT_LOOK, ...(app.model.look || {}) };
-  let tab = SLOTS[0].key;
+  // While hatching, only the tabs with a real choice among the free starter styles.
+  const slots = mode === 'hatch'
+    ? SLOTS.filter((s) => s.items.filter((it) => it.cost === 0 && !it.reward && !it.hidden).length > 1)
+    : SLOTS;
+  let tab = slots[0].key;
   const age = mode === 'hatch' ? 0.15 : growth(app.model).age;
   const wings = mode !== 'hatch' && growth(app.model).wings;
   const preview = h('div', { class: 'designer-preview' });
@@ -42,9 +58,9 @@ export function designer(app, { mode = 'boutique', onDone }) {
   const pillSlot = h('div', {});
 
   function draw() {
-    preview.innerHTML = unicornSVG(look, { age, wings });
+    preview.innerHTML = petSceneSVG(look, { age, wings });
     if (mode !== 'hatch') pillSlot.replaceChildren(dustPill(app.model));
-    tabs.replaceChildren(...SLOTS.map((s) => h('button', {
+    tabs.replaceChildren(...slots.map((s) => h('button', {
       class: `tab ${s.key === tab ? 'on' : ''}`, role: 'tab', type: 'button', 'aria-selected': String(s.key === tab),
       onClick: () => { tab = s.key; draw(); },
     }, s.label)));

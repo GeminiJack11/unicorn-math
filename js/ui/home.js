@@ -1,6 +1,6 @@
 // Home: her unicorn, today's quest, and the ways to the map, window and boutique.
 import { h, art, icon } from './dom.js';
-import { unicornSVG } from '../art/unicorn.js';
+import { petSceneSVG } from '../art/scenes.js';
 import { sfx } from '../audio/sfx.js';
 import { growth, stardust, practicedToday, currentIsland } from '../engine/model.js';
 
@@ -35,7 +35,7 @@ export function homeScreen(app) {
     h('header', { class: 'topbar' }, h('h1', { class: 'game-title' }, m.settings.title || 'Rainbow Isles'),
       h('div', { class: 'top-right' }, dustPill(m), soundButton(app))),
     h('main', { class: 'home-main' },
-      h('div', { class: 'hero' }, art(unicornSVG(m.look, { age: g.age, wings: g.wings }), 'hero-pet idle'),
+      h('div', { class: 'hero' }, art(petSceneSVG(m.look, { age: g.age, wings: g.wings }), 'hero-pet idle'),
         h('div', { class: 'name-tag' }, m.name || 'Your unicorn')),
       h('div', { class: 'home-actions' },
         h('p', { class: 'greeting' }, done ? "Today's quest is done! You can play another if you like." : "Ready for today's quest?"),

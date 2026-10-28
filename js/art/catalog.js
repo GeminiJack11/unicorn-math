@@ -72,6 +72,9 @@ export const HEADS = [
   item('head', 'daisy', 'Daisy Chain', 0, 'daisy', { reward: 'glade' }),
   item('head', 'starfish', 'Starfish Clip', 0, 'starfish', { reward: 'starfish' }),
   item('head', 'leaves', 'Leaf Crown', 0, 'leaves', { reward: 'sloth' }),
+  item('head', 'party', 'Party Hat', 30, 'party'),
+  item('head', 'witch', 'Witch Hat', 70, 'witch'),
+  item('head', 'crown', 'Crown', 120, 'crown'),
 ];
 
 export const NECKS = [
@@ -86,14 +89,71 @@ export const NECKS = [
   item('neck', 'pearls', 'Pearls', 0, 'pearls', { reward: 'octopus' }),
 ];
 
+export const HAIRSTYLES = [
+  item('hair', 'classic', 'Classic', 0, 'classic'),
+  item('hair', 'puffy', 'Puffy', 25, 'puffy'),
+  item('hair', 'curly', 'Curly', 35, 'curly'),
+  item('hair', 'wavy', 'Long & Wavy', 40, 'wavy'),
+  item('hair', 'braids', 'Braids', 45, 'braids'),
+  item('hair', 'spikes', 'Rock Star', 60, 'spikes'),
+];
+
+export const FACES = [
+  item('face', 'none', 'None', 0, null),
+  item('face', 'lashes', 'Long Lashes', 15, 'lashes'),
+  item('face', 'heartglasses', 'Heart Glasses', 30, 'heartglasses'),
+  item('face', 'starshades', 'Star Shades', 35, 'starshades'),
+  item('face', 'hearteyes', 'Heart Eyes', 45, 'hearteyes'),
+  item('face', 'stareyes', 'Star Eyes', 45, 'stareyes'),
+];
+
+export const OUTFITS = [
+  item('outfit', 'none', 'None', 0, null),
+  item('outfit', 'tutu', 'Tutu', 60, 'tutu'),
+  item('outfit', 'cape', 'Royal Cape', 90, 'cape'),
+];
+
+export const TAILS = [
+  item('tail', 'none', 'None', 0, null),
+  item('tail', 'pinkbow', 'Pink Bow', 10, ['#ff6fae', '#ff9cc9']),
+  item('tail', 'bluebow', 'Blue Bow', 10, ['#5aa1ff', '#9cc8ff']),
+  item('tail', 'goldbow', 'Gold Bow', 20, ['#f5b82e', '#ffe08a']),
+  item('tail', 'ribbons', 'Rainbow Ribbons', 35, 'ribbons'),
+];
+
+export const HOOVES = [
+  item('hoof', 'match', 'Match', 0, null),
+  item('hoof', 'pink', 'Pink', 10, '#ff9cc9'),
+  item('hoof', 'sky', 'Sky', 10, '#8fd0ff'),
+  item('hoof', 'lilac', 'Lilac', 10, '#c4a3ff'),
+  item('hoof', 'gold', 'Gold', 15, '#ffd56b'),
+  item('hoof', 'silver', 'Silver', 15, '#dfe3ee'),
+  item('hoof', 'glitter', 'Glitter', 30, 'glitter'),
+];
+
+export const SCENES = [
+  item('scene', 'none', 'None', 0, null),
+  item('scene', 'meadow', 'Meadow', 60, 'meadow'),
+  item('scene', 'beach', 'Beach', 120, 'beach'),
+  item('scene', 'sea', 'Under the Sea', 150, 'sea'),
+  item('scene', 'night', 'Starry Night', 180, 'night'),
+  item('scene', 'castle', 'Castle', 250, 'castle'),
+];
+
 export const SLOTS = [
   { key: 'coat', label: 'Coat', items: COATS },
   { key: 'mane', label: 'Mane', items: MANES },
+  { key: 'hair', label: 'Hairstyle', items: HAIRSTYLES },
   { key: 'horn', label: 'Horn', items: HORNS },
   { key: 'eye', label: 'Eyes', items: EYES },
+  { key: 'face', label: 'Face', items: FACES },
   { key: 'pattern', label: 'Pattern', items: PATTERNS },
-  { key: 'head', label: 'Head', items: HEADS },
+  { key: 'head', label: 'Hats', items: HEADS },
   { key: 'neck', label: 'Neck', items: NECKS },
+  { key: 'outfit', label: 'Outfit', items: OUTFITS },
+  { key: 'tail', label: 'Tail', items: TAILS },
+  { key: 'hoof', label: 'Hooves', items: HOOVES },
+  { key: 'scene', label: 'Scene', items: SCENES },
 ];
 
 const BY_ID = new Map(SLOTS.flatMap((s) => s.items.map((i) => [i.id, i])));
@@ -103,6 +163,7 @@ export const findItem = (id) => BY_ID.get(id) || null;
 export const DEFAULT_LOOK = {
   coat: 'coat:snow', mane: 'mane:rainbow', horn: 'horn:gold', eye: 'eye:violet',
   pattern: 'pattern:none', head: 'head:none', neck: 'neck:none',
+  hair: 'hair:classic', face: 'face:none', outfit: 'outfit:none', tail: 'tail:none', hoof: 'hoof:match', scene: 'scene:none',
 };
 
 // The colors and items a look stands for, falling back to defaults for anything unknown.
