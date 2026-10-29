@@ -11,10 +11,12 @@ import { mapScreen } from './ui/map.js';
 import { windowScreen } from './ui/window.js';
 import { boutiqueScreen } from './ui/designer.js';
 import { grownupsScreen } from './ui/grownups.js';
+import { picnicScreen } from './ui/picnic.js';
+import { spellbookScreen } from './ui/spellbook.js';
 
 const SCREENS = {
   home: homeScreen, hatch: hatchScreen, session: sessionScreen, results: resultsScreen,
-  map: mapScreen, window: windowScreen, boutique: boutiqueScreen, grownups: grownupsScreen,
+  map: mapScreen, window: windowScreen, boutique: boutiqueScreen, grownups: grownupsScreen, picnic: picnicScreen, spellbook: spellbookScreen,
 };
 const params = new URLSearchParams(location.search);
 

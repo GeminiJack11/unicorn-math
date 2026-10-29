@@ -18,6 +18,12 @@ modern browser, installs like an app on Chromebooks and Android tablets, and wor
   once it's answered correctly without counting it out on three different days.
 - **Rewards never disappear.** Stardust buys unicorn styles; learning every fact on an island
   befriends its animal, which brings a gift; the Magic Window lights up pane by pane.
+- **Division as sharing.** In a Picnic, treats are dealt out to the guests one round at a
+  time, so ÷ means "how many each". A missed division spell in a quest turns into the same
+  picnic. Picnics earn a little stardust (capped per day) but never count as remembering a fact.
+- **Her own memory charms.** In the Spell Book she can draw a picture or write a rhyme for any
+  spell; it appears in that spell's hints from then on. Charms are saved as pen strokes on the
+  device and travel with backups.
 
 ## Privacy
 

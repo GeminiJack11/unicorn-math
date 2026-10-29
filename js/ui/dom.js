@@ -58,6 +58,8 @@ export const ICONS = {
   mute: S('<path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z"/><path d="m16 9.5 5 5M21 9.5l-5 5"/>'),
   star: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5c.9 5.6 4.9 9.6 10.5 10.5-5.6.9-9.6 4.9-10.5 10.5C11.1 16.9 7.1 12.9 1.5 12 7.1 11.1 11.1 7.1 12 1.5z" fill="currentColor"/></svg>',
   back: S('<path d="M15 5 8 12l7 7"/>'),
+  book: S('<path d="M12 6.5C10 5 7 4.5 3.5 5v13.5c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5V20"/>'),
+  basket: S('<path d="M3.5 10h17l-1.9 9.1a1.6 1.6 0 0 1-1.6 1.3H7a1.6 1.6 0 0 1-1.6-1.3z"/><path d="m8 10 4-6 4 6"/><path d="M9 13.5v3.5M12 13.5v3.5M15 13.5v3.5"/>'),
   close: S('<path d="M6 6l12 12M18 6 6 18"/>'),
   lock: S('<rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/>'),
   check: S('<path d="m5 12.5 4.5 4.5L19 7.5"/>'),

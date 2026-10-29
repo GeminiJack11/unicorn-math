@@ -7,6 +7,8 @@ import { pictureSVG, triangleSVG } from './visuals.js';
 import { snapshot } from './progress.js';
 import { unicornSVG } from '../art/unicorn.js';
 import { friendSVG } from '../art/friends.js';
+import { picnicBoard } from './picnic.js';
+import { charmBox } from './spellbook.js';
 import { sfx } from '../audio/sfx.js';
 import { planSession, SessionRunner, fluencyLimit } from '../engine/schedule.js';
 import { questionParts } from '../engine/facts.js';
@@ -28,6 +30,7 @@ export function sessionScreen(app, { focus = null } = {}) {
   let ended = false;
   let timer = null;
   let right = 0;
+  const missed = new Set(); // spell families missed this quest, for a Spell Book nudge
   app.log('session', { phase: 'start', s: sid, focus });
 
   const keypad = createKeypad();
@@ -102,7 +105,7 @@ export function sessionScreen(app, { focus = null } = {}) {
       body.append(h('div', { class: 'tag' }, 'New spell'), h('h2', { class: 'fact-title' }, `${f} × ${n} = ${p}`),
         h('div', { class: 'lesson-grid' }, art(pictureSVG(trick.picture), 'picture-wrap'),
           h('div', { class: 'steps' }, h('h3', {}, `Unicorn Trick: ${trick.name}`), trick.steps.map((s) => h('p', {}, s)),
-            rhyme ? h('p', { class: 'rhyme' }, rhyme) : null,
+            mine(item) || (rhyme ? h('p', { class: 'rhyme' }, rhyme) : null),
             f !== n ? h('p', { class: 'line' }, `Turn-around: ${n} × ${f} = ${p} too!`) : null)));
     } else {
       const fam = cat.items.get(lesson.family);
@@ -165,6 +168,7 @@ export function sessionScreen(app, { focus = null } = {}) {
       const ok = !skip && given === parts.answer;
       const fluent = ok && ms <= limit;
       if (ok) right++;
+      else if (!probe) missed.add(item.family);
       app.log('answer', { item: item.id, ctx: probe ? 'probe' : card.ctx, ok, fluent, ms, given, s: sid, ...(skip ? { skip: true } : {}) });
       if (ok) celebrate(box, answer, probe && fluent, () => next({ ok, fluent }));
       else if (probe) newSpell(parts, skip, () => next({ ok: false }));
@@ -211,16 +215,30 @@ export function sessionScreen(app, { focus = null } = {}) {
     let typed = '';
     const answer = h('span', { class: 'answer' }, '?');
     const flipped = item.kind === 'mul' && item.teach !== item.other && parts.left !== item.teach;
+    const typeNote = h('p', { class: 'q-note' }, `Type ${parts.answer} to keep going`);
+    // Her own charm comes first, in place of the built-in rhyme.
+    const charm = mine(item);
+    const steps = h('div', { class: 'steps' }, charm,
+      flipped ? h('p', { class: 'line' }, `${parts.left} × ${parts.right} is the same as ${item.teach} × ${item.other}.`) : null,
+      trick.steps.map((s) => h('p', {}, s)), !charm && rhyme ? h('p', { class: 'rhyme' }, rhyme) : null);
+    let picture = art(pictureSVG(trick.picture), 'picture-wrap');
+    // Division is sharing: she deals the treats out herself and sees how many each gets.
+    if (item.kind === 'div' && item.p > 0 && item.d >= 2) {
+      const { p, d, answer: q } = item;
+      picture = picnicBoard(app, { p, d, compact: true, onDealt: () => {
+        steps.replaceChildren(h('p', { class: 'big-line' }, `Each friend got ${q}!`), h('p', {}, `${d} × ${q} = ${p}`), h('p', {}, `so ${p} ÷ ${d} = ${q}`), ...(charm ? [charm] : []));
+        typeNote.textContent = `Type ${q} to keep going`;
+      } }).el;
+      steps.replaceChildren(h('p', { class: 'big-line' }, `Share ${p} treats between ${d} friends.`), h('p', {}, 'Tap the basket to give them out, one each at a time.'), ...(charm ? [charm] : []));
+      typeNote.textContent = 'Share them out, then type how many each friend got.';
+    }
     stage.replaceChildren(h('div', { class: 'card hint-card pop-in' },
       h('div', { class: 'tag' }, 'Unicorn Trick'),
       h('h3', {}, "Let's look at this one together"),
-      h('div', { class: 'lesson-grid' }, art(pictureSVG(trick.picture), 'picture-wrap'),
-        h('div', { class: 'steps' },
-          flipped ? h('p', { class: 'line' }, `${parts.left} × ${parts.right} is the same as ${item.teach} × ${item.other}.`) : null,
-          trick.steps.map((s) => h('p', {}, s)), rhyme ? h('p', { class: 'rhyme' }, rhyme) : null)),
+      h('div', { class: `lesson-grid ${item.kind === 'div' && item.p > 0 && item.d >= 2 ? 'sharing' : ''}` }, picture, steps),
       h('div', { class: 'problem small' }, h('span', {}, parts.left), h('span', { class: 'op' }, parts.op),
         h('span', {}, parts.right), h('span', { class: 'eq' }, '='), answer),
-      h('p', { class: 'q-note' }, `Type ${parts.answer} to keep going`)));
+      typeNote));
     keypad.setEnabled(true);
     keypad.bind({
       digit(d) {
@@ -250,6 +268,11 @@ export function sessionScreen(app, { focus = null } = {}) {
     });
   }
 
+  function mine(item) {
+    const charm = app.model.charms.get(item.family);
+    return charm ? charmBox(charm) : null;
+  }
+
   function end(done) {
     if (ended) return;
     ended = true;
@@ -260,7 +283,7 @@ export function sessionScreen(app, { focus = null } = {}) {
   function finish() {
     end(true);
     sfx.fanfare();
-    app.go('results', { before, answered: run.answered, right });
+    app.go('results', { before, answered: run.answered, right, missed: [...missed] });
   }
 
   function leave() {

@@ -1,6 +1,7 @@
 // Everything the game knows is derived by folding the event log in order, so two devices'
 // logs merged together always produce the same progress.
 import { localDay, addDays, compareEvents } from './log.js';
+import { cleanCharm } from './charms.js';
 
 // Days until a fact comes back, by box. Box 1 = still learning (back today), 6 = solid.
 export const INTERVALS = [0, 0, 1, 2, 4, 7, 14];
@@ -8,6 +9,8 @@ export const INTERVALS = [0, 0, 1, 2, 4, 7, 14];
 export const MASTERY_DAYS = 3;
 export const SESSION_BONUS = 5;
 export const MASTERY_BONUS = 10;
+// Stardust a day from picnics (one per treat-sharing problem solved).
+export const PICNIC_DAILY_DUST = 10;
 
 export function emptyModel(catalog) {
   return {
@@ -17,6 +20,7 @@ export function emptyModel(catalog) {
     look: null,
     settings: {},
     bought: new Set(),
+    charms: new Map(),
     earned: 0,
     spent: 0,
     days: new Map(),
@@ -47,7 +51,7 @@ function itemState(m, id) {
 function dayStat(m, day) {
   let d = m.days.get(day);
   if (!d) {
-    d = { n: 0, ok: 0, ms: 0, sessions: 0 };
+    d = { n: 0, ok: 0, ms: 0, sessions: 0, picnics: 0, picnicDust: 0 };
     m.days.set(day, d);
   }
   return d;
@@ -68,6 +72,8 @@ export function applyEvent(m, ev) {
     case 'intro': applyIntro(m, ev); break;
     case 'answer': applyAnswer(m, ev); break;
     case 'session': applySession(m, ev); break;
+    case 'picnic': applyPicnic(m, ev); break;
+    case 'charm': applyCharm(m, ev); break;
   }
   return m;
 }
@@ -160,6 +166,28 @@ function applySession(m, ev) {
   if (ev.done) {
     d.sessions++;
     if (d.sessions <= 3) m.earned += SESSION_BONUS;
+  }
+}
+
+// Her charm for a spell family (one charm covers 6 × 7, 7 × 6, 42 ÷ 6 and 42 ÷ 7). The
+// newest one wins; an empty one removes it.
+function applyCharm(m, ev) {
+  const fam = m.catalog.items.get(ev.family);
+  if (!fam || fam.kind !== 'mul') return;
+  const charm = cleanCharm(ev);
+  if (charm) m.charms.set(fam.id, { ...charm, t: ev.t });
+  else m.charms.delete(fam.id);
+}
+
+// A picnic problem solved: a little stardust, capped per day. It deliberately leaves every
+// fact's progress alone, because dealing treats out and counting isn't remembering.
+function applyPicnic(m, ev) {
+  if (!m.catalog.items.has(ev.item)) return;
+  const d = dayStat(m, localDay(ev.t));
+  d.picnics++;
+  if (ev.solved && d.picnicDust < PICNIC_DAILY_DUST) {
+    d.picnicDust++;
+    m.earned += 1;
   }
 }
 

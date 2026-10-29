@@ -41,7 +41,7 @@ export function homeScreen(app) {
         h('p', { class: 'greeting' }, done ? "Today's quest is done! You can play another if you like." : "Ready for today's quest?"),
         h('button', { class: 'btn primary huge', type: 'button', onClick: () => app.go('session') }, icon('star'), done ? 'Play another quest' : "Start today's quest"),
         h('p', { class: 'where' }, m.cleared.size === app.catalog.islands.length ? 'Every island visited! Quests keep your spells shiny.' : `Next stop: ${isl.name} (${isl.table})`),
-        h('div', { class: 'tiles' }, tile('Map', 'map', 'map'), tile('Magic Window', 'window', 'window'), tile('Boutique', 'wand', 'boutique')))),
+        h('div', { class: 'tiles' }, tile('Map', 'map', 'map'), tile('Magic Window', 'window', 'window'), tile('Boutique', 'wand', 'boutique'), tile('Picnic', 'basket', 'picnic'), tile('Spell Book', 'book', 'spellbook')))),
     h('button', { class: 'grownups-link', type: 'button', onClick: () => app.go('grownups') }, 'Grown-ups'));
   return { el };
 }

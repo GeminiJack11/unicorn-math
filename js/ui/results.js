@@ -11,7 +11,7 @@ function factLabel(it) {
   return it.kind === 'mul' ? `${it.a} × ${it.b} = ${it.answer}` : `${it.p} ÷ ${it.d} = ${it.answer}`;
 }
 
-export function resultsScreen(app, { before, right = 0 }) {
+export function resultsScreen(app, { before, right = 0, missed = [] }) {
   const m = app.model;
   const cat = app.catalog;
   const ch = changes(before, m);
@@ -20,6 +20,8 @@ export function resultsScreen(app, { before, right = 0 }) {
   const newSpells = items(ch.learned);
   const mastered = items(ch.mastered);
   const masteredRules = ch.mastered.length - mastered.length;
+  // One spell she missed today that has no charm yet (rules like ×0 don't need one).
+  const charmIdea = missed.map((id) => cat.items.get(id)).find((f) => f && !f.rule && !m.charms.has(f.id)) || null;
 
   const news = [];
   for (const i of ch.cleared) {
@@ -49,6 +51,9 @@ export function resultsScreen(app, { before, right = 0 }) {
       mastered.length || masteredRules ? h('section', { class: 'spell-list' }, h('h3', {}, 'Spells you know by heart now'),
         h('div', { class: 'chips' }, mastered.map((it) => chip(factLabel(it), 'gold')),
           masteredRules ? chip(`+${masteredRules} magic-rule spells`, 'gold') : null)) : null,
+      charmIdea ? h('div', { class: 'charm-nudge' },
+        h('span', {}, `${charmIdea.teach} × ${charmIdea.other} was tricky today. A charm could help you remember it!`),
+        h('button', { class: 'btn soft', type: 'button', onClick: () => app.go('spellbook', { family: charmIdea.id }) }, icon('book'), 'Make a charm')) : null,
       h('div', { class: 'row-actions' },
         h('button', { class: 'btn soft big', type: 'button', onClick: () => app.go('window') }, icon('window'), 'Magic Window'),
         h('button', { class: 'btn primary big', type: 'button', onClick: () => app.go('home') }, icon('home'), 'Home'))));
